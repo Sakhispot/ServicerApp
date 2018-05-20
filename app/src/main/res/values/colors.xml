@@ -9,5 +9,10 @@
     <color name="hintText">#f8f8fa</color>
     <color name="editText">#ffffff</color>
     <color name="status">#e6d820</color>
+    <color name="contactInfo">#999999</color>
+    <color name="serviceName">#222222</color>
+    <color name="serviceBackground">#f913b8</color>
+    <color name="serviceForground">#ffffff</color>
+
 
 </resources>

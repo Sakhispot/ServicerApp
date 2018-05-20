@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">ServiCer</string>
     <string name="title_activity_service">ServiCer</string>
+    <string name="title_activity_main2">ServiCer</string>
 </resources>

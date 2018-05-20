@@ -3,6 +3,8 @@ package com.example.sakhile.tasker;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -31,22 +33,25 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.widget.TextView;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-
+import  android.content.pm.ActivityInfo;
 import java.util.ArrayList;
 import java.util.List;
+import android.view.Display;
+import android.view.WindowManager;
 
 public class Main2Activity extends AppCompatActivity implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     private CoordinatorLayout coordinatorLayout;
     private RecyclerView recyclerView;
     Adapter adapter;
-    private List<Services> servicesList = new ArrayList<>();
+    private ArrayList<Services> servicesList = new ArrayList<>();
     public ProgressBar progressBar;
     Services service;
     EditText name;
     EditText location;
     EditText contact;
     View view;
+    Display display;
 
 
     @Override
@@ -56,7 +61,19 @@ public class Main2Activity extends AppCompatActivity implements RecyclerItemTouc
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        display= ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+        final int orientation= display.getOrientation();
+
+        if (savedInstanceState != null) {
+            servicesList= (ArrayList<Services>) savedInstanceState.getSerializable("Services");
+        }
+        else {
+            servicesList= new ArrayList<>();
+            loadServices();
+
+        }
+
+                FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,42 +85,42 @@ public class Main2Activity extends AppCompatActivity implements RecyclerItemTouc
         recyclerView= (RecyclerView)findViewById(R.id.services_rv);
         coordinatorLayout= (CoordinatorLayout)findViewById(R.id.coodinator_layout);
 
-        try{
-            if (isNetworkAvailable()) {
-                LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-                recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
-                //set the adapter
-                recyclerView.setAdapter(adapter);
-                recyclerView.setLayoutManager(layoutManager);
-                recyclerView.setItemAnimator(new DefaultItemAnimator());
-                recyclerView.setAdapter(adapter);
+        //set the adapter
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
+
+    }
+
+    public void loadServices(){
+
+        try {
+            if (isNetworkAvailable())
                 new ServiceLoader().execute("");
-
-                ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
-                new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
-
-            } else{
+            else {
                 //if not available, add a Snackbar to display there's no connection#
                 Snackbar.make(view, "Connection failed. Check your Internet connection", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
             }
         }catch(Exception ex){
-            ex.printStackTrace();
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(Main2Activity.this);
-            builder.setMessage("Error occurred while checking connection")
-                    .setCancelable(false)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-
-                        }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
+            ex.getMessage();
         }
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("Services", servicesList);
     }
 
     private boolean isNetworkAvailable() {
@@ -115,7 +132,7 @@ public class Main2Activity extends AppCompatActivity implements RecyclerItemTouc
 
     public void showAddServicesDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(Main2Activity.this);
-        builder.setTitle("Title");
+        builder.setTitle("Add a service");
 
         View viewInflated = LayoutInflater.from(Main2Activity.this).inflate(R.layout.services_dialog, null);
 // Set up the input
@@ -131,10 +148,13 @@ public class Main2Activity extends AppCompatActivity implements RecyclerItemTouc
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
 
+                service= new Services(name.getText().toString(), location.getText().toString(),
+                        contact.getText().toString());
                 try {
 
                     if (isNetworkAvailable()) {
                         new submitRecords().execute("");
+                        servicesList.add(service);
                     } else{
                         //if not available, add a Snackbar to display there's no connection#
                         Snackbar.make(view, "Connection failed. Check your Internet connection", Snackbar.LENGTH_LONG)
@@ -169,8 +189,7 @@ public class Main2Activity extends AppCompatActivity implements RecyclerItemTouc
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
-        if (viewHolder instanceof Adapter.MyViewHolder) {
-
+        if (viewHolder instanceof Adapter.MyViewHolder){
 
             // remove the item from recycler view
             adapter.removeItem(viewHolder.getAdapterPosition());
@@ -289,7 +308,6 @@ public class Main2Activity extends AppCompatActivity implements RecyclerItemTouc
 
             }
         }
-
 
         @Override
         protected void onPreExecute() {

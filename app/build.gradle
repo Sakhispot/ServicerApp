@@ -1,4 +1,8 @@
 apply plugin: 'com.android.application'
+configurations.all {
+    resolutionStrategy.force 'com.android.support:support-v7:25.1.0'
+}
+
 
 android {
     compileSdkVersion 25
@@ -20,7 +24,6 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:25.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
@@ -28,4 +31,6 @@ dependencies {
     implementation 'com.android.support:design:25.1.0'
     implementation files('libs/mongo-java-driver-3.4.0-SNAPSHOT.jar')
     implementation 'com.google.code.gson:gson:2.2.4'
+    implementation 'com.android.support:recyclerview-v7:25.1.0'
+
 }
