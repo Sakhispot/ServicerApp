@@ -5,18 +5,15 @@
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
-    android:focusable="true"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/row_padding_vertical"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/row_padding_vertical">
+    android:focusable="true">
 
     <RelativeLayout
         android:id="@+id/service-backgound"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:background="@color/serviceBackground">
+        android:background="@color/serviceBackground"
+        android:paddingTop="33dp"
+        android:paddingBottom="33dp">
 
 
         <TextView
@@ -26,47 +23,70 @@
             android:layout_toLeftOf="@+id/delete_img"
             android:text="Delete"
             android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:textColor="@color/editText"
+            />
 
         <ImageView
             android:id="@+id/delete_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_delete_black_24dp" />
+            android:src="@drawable/ic_delete_black_24dp"
+            android:layout_marginRight="10dp"/>
 
     </RelativeLayout>
 
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/services-ground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@color/serviceForground">
 
+        <ImageView android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/initials_view"/>
+
         <TextView
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/initials_view"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
             android:textSize="16dp"
-            android:textStyleBackground="bold"
+            android:textStyle="bold"
             android:textColor="@color/serviceName"/>
+
+
 
         <TextView
             android:id="@+id/location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/initials_view"
+            android:layout_marginLeft="10dp"
             android:layout_below="@id/name"
+            android:drawableLeft="@drawable/ic_location_on_black_24dp"
+            android:drawablePadding="5dp"
             android:textColor="@color/serviceName"/>
+
 
         <TextView
             android:id="@+id/contact"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/initials_view"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="15dp"
+            android:layout_below="@id/location"
+            android:drawableLeft="@drawable/ic_local_phone_black_24dp"
+            android:drawablePadding="5dp"
             android:textColor="@color/contactInfo"/>
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

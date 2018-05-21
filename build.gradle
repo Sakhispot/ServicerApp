@@ -7,6 +7,10 @@ configurations.all {
 buildscript {
     
     repositories {
+        maven {
+            url 'http://dl.bintray.com/amulyakhare/maven'
+        }
+
         google()
         jcenter()
     }
